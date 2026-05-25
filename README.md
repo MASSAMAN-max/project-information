@@ -226,3 +226,58 @@ export default async function ProjectPage({
     );
   }
 }
+
+
+
+// クライアント側のアクションを管理するコンポーネント
+"use client";
+
+interface ActionProps {
+  lineUrl: string;
+  shareUrl: string;
+  shareMessage: string;
+}
+
+export function ActionButtons({ lineUrl, shareUrl, shareMessage }: ActionProps) {
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      alert("案件URLをコピーしました！");
+    } catch {
+      alert("コピーに失敗しました。");
+    }
+  };
+
+  const handleMessenger = async () => {
+    try {
+      await navigator.clipboard.writeText(shareMessage);
+      alert("案件情報をコピーしました！Messengerが開いたら貼り付けて送信してください。");
+      window.open("https://m.me/", "_blank");
+    } catch {
+      alert("コピーに失敗しました。");
+    }
+  };
+
+  return (
+    <div className="space-y-2.5">
+      <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#06C755] hover:bg-[#05b04b] text-white font-bold rounded-xl text-sm transition shadow-sm">
+        <MessageCircle className="w-5 h-5 fill-white" /> LINEで案件URLを送る
+      </a>
+
+      <button onClick={handleMessenger} className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#0084FF] hover:bg-[#0074df] text-white font-bold rounded-xl text-sm transition shadow-sm">
+        <Share2 className="w-5 h-5" /> Messengerで案件URLを送る
+      </button>
+
+      <button onClick={handleCopyUrl} className="flex items-center justify-center gap-2 w-full py-3.5 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition shadow-sm">
+        <Copy className="w-4 h-4" /> 案件URLをコピー
+      </button>
+
+      <div className="p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
+        <div className="text-xs font-semibold text-slate-400 mb-1">現在の共有URL</div>
+        <div className="text-xs text-slate-500 dark:text-slate-400 break-all select-all font-mono bg-slate-50 dark:bg-slate-900 p-2 rounded border border-slate-100 dark:border-slate-800">
+          {shareUrl}
+        </div>
+      </div>
+    </div>
+  );
+}
